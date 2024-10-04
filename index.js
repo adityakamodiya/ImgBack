@@ -50,5 +50,5 @@ app.post('/send', async (req, res) => {
 const PORT = 8000;
 connection.then((client) => {
   db = client.db(dbName);
+  app.listen(PORT, () => console.log(PORT + ' started'));
 });
-app.listen(PORT, () => console.log(PORT + ' started'));
