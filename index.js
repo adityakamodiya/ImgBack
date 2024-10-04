@@ -14,7 +14,13 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middleware
-app.use(cors({ origin: '*' }));
+// Update CORS middleware in your Express app
+app.use(cors({
+    origin: 'https://img-front.onrender.com', // Allow your frontend domain
+    methods: ['GET', 'POST'], // Specify allowed HTTP methods
+    credentials: true // Allow credentials (if needed)
+  }));
+  
 app.use(fileUpload({ useTempFiles: true }));
 app.use(express.urlencoded({ extended: false }));
 
