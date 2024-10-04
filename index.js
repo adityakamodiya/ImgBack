@@ -19,7 +19,7 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(express.urlencoded({ extended: false }));
 
 // Serve static files from the uploads directory
-app.use('/file', express.static(path.join(__dirname, 'uploads'))); // Change '/uploads' to '/file'
+app.use('/file', express.static(path.join(__dirname, 'uploads'))); // Serve files from the /file endpoint
 
 // Handle file upload via POST request
 app.post('/send', async (req, res) => {
@@ -34,12 +34,11 @@ app.post('/send', async (req, res) => {
     if (err) return res.status(500).send(err);
 
     // Save the file information in the database
-    const fileId = uploadedFile.name; // This is the filename, you can use a unique ID if needed
-    const filePath = path.join(__dirname, 'uploads', fileId); // Store the full path if needed
+    const fileId = uploadedFile.name; // You can also use a unique ID if needed
 
     try {
-    //   await db.collection('files').insertOne({ fileId: fileId, filePath: filePath });
-      res.send({ message: `File uploaded successfully`, fileId: fileId, filePath: filePath });
+      await db.collection('files').insertOne({ fileId: fileId });
+      res.send({ message: `File uploaded successfully`, fileId: fileId });
     } catch (dbError) {
       return res.status(500).send('Error saving file info to database.');
     }
@@ -47,7 +46,7 @@ app.post('/send', async (req, res) => {
 });
 
 // Start the server on a specific port
-const PORT = 8000;
+const PORT = process.env.PORT || 8000; // Use the port from environment variables for Render
 connection.then((client) => {
   db = client.db(dbName);
   app.listen(PORT, () => console.log(PORT + ' started'));
