@@ -44,8 +44,8 @@ app.post('/send', async (req, res) => {
 
     try {
      let detail =   await db.collection('files').insertOne({ fileId: fileId });
-     let data = await db.collection('files').find().tostring();
-      res.send({ message: `File uploaded successfully`, fileId: fileId, data });
+     let data = await db.collection('files').find().toArray();
+      res.send({ message: `File uploaded successfully`, fileId: fileId },data);  
     } catch (dbError) {
       return res.status(500).send('Error saving file info to database.');
     }
